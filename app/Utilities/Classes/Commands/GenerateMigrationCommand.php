@@ -27,7 +27,7 @@ class GenerateMigrationCommand
         $this->namespace = '\App\Models\\';
     }
 
-    public function run($argument)
+    public function run($argument) : void
     {
         if (empty($argument)){
             $this->consoleOutput->writeln("<error>Argument Not Found !</error>");
@@ -38,7 +38,7 @@ class GenerateMigrationCommand
         $this->buildMigration();
     }
 
-    private function setMainModelAndFile()
+    private function setMainModelAndFile() : void
     {
         $modelFile = app_path('Models/' . ucfirst($this->argument) . '.php');
         if (!file_exists($modelFile)) {
@@ -48,7 +48,7 @@ class GenerateMigrationCommand
         $this->mainModelFile = $this->argument;
     }
 
-    private function buildMigration()
+    private function buildMigration() : void
     {
         $this->columns = $this->getTranslatedAttributes();
         $this->controlColumnsName();
@@ -63,7 +63,7 @@ class GenerateMigrationCommand
         return property_exists($modelName, 'translatedAttributes') ?  (new  $modelName())->translatedAttributes :  $this->setTranslatedAttributes();
     }
 
-    private function setTranslatedAttributes()
+    private function setTranslatedAttributes() : array
     {
         echo "Columnlari Daxil Edin (Note: , ilə ayırın) :  ";
         $data = fgets(STDIN);
@@ -170,7 +170,7 @@ class GenerateMigrationCommand
         return ucfirst($this->mainModel);
     }
 
-    private function makeMigration()
+    private function makeMigration() : void
     {
 
         $this->stub = str_replace('{{ table }}', $this->tableName, $this->stub);
@@ -181,7 +181,7 @@ class GenerateMigrationCommand
         $this->consoleOutput->writeln("<info>Migration Created</info>");
     }
 
-    private function generateTranslateColumns()
+    private function generateTranslateColumns() : string
     {
         $columns = '';
         foreach ($this->columns as $column) {
@@ -191,7 +191,7 @@ class GenerateMigrationCommand
         return $columns;
     }
 
-    private function generateMigrationFileName()
+    private function generateMigrationFileName() : string
     {
         $migrationName = __DIR__ . '/../../../database/migrations/';
         $migrationName .= now()->format('Y') . '_';
