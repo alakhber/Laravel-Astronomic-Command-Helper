@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Utilities\Classes\Commands\GenerateMigrationCommand;
 use App\Utilities\Classes\Commands\GenerateMigrationCommandClass;
+use App\Utilities\Classes\Commands\GenerateModelCommand;
+use App\Utilities\Classes\Commands\TranslateCommand;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 
@@ -28,7 +30,10 @@ class Translation extends Command
      */
     public function handle()
     {
-        (new GenerateMigrationCommand())->run($this->argument('ModelName'));
+        $argument = $this->argument('ModelName');
+        // (new GenerateMigrationCommand())->run($argument);
+        // (new GenerateModelCommand())->run($argument);
+        (new TranslateCommand())->run($argument);
         
     }
 }
