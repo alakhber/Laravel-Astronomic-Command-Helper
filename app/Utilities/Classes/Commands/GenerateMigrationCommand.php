@@ -45,6 +45,7 @@ class GenerateMigrationCommand
             $this->consoleOutput->writeln("<error>" . ucfirst($this->argument) . " Not Found !</error>");
         }
         $this->mainModel = strtolower($this->argument);
+        $this->mainTable = $this->mainModel;
         $this->mainModelFile = $this->argument;
     }
 
@@ -193,7 +194,7 @@ class GenerateMigrationCommand
 
     private function generateMigrationFileName() : string
     {
-        $migrationName = __DIR__ . '/../../../database/migrations/';
+        $migrationName = base_path('database/migrations/');
         $migrationName .= now()->format('Y') . '_';
         $migrationName .= now()->format('m') . '_';
         $migrationName .= now()->format('d') . '_';
