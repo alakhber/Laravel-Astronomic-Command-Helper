@@ -15,16 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $string = 'a,1,e,f,g,';
-    $data = explode(",", $string);
-     
-    $columns = [];
-    foreach ($data as $value) {
-       if($value!=''){
-           $columns[] = $value;
-        }
-        // $this->consoleOutput->writeln(empty($value));
-       echo $value.'---'; 
-    }
-    dd($columns);
+    return Post::all();
 });
