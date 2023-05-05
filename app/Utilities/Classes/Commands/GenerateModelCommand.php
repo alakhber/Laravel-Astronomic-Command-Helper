@@ -8,64 +8,41 @@ use Illuminate\Support\Facades\Schema;
 class GenerateModelCommand
 {
 
-    private $modelSuffix = 'Translation';
-    private $mainModel;
-    private $mainModelFile;
-    private $namespace;
-    private $stub;
-    private $consoleOutput;
+    private $tableName;
     private $argument;
+    private $consoleOutput;
     private $columns;
+    private $namespace = 'App\Models\Translation';
+    private $stub ;
 
     public function __construct()
     {
 
         $this->consoleOutput = new \Symfony\Component\Console\Output\ConsoleOutput();
         $this->stub = file_get_contents(base_path('stubs/translation.model.stub'));
-        $this->namespace = '\App\Models\\';
     }
 
-    public function run($argument) : void
+    public function run($argument, $transledColumns): void
     {
-        if (empty($argument)){
-            $this->consoleOutput->writeln("<error>Argument Not Found !</error>");
-            die;
-        } 
         $this->argument = $argument;
-        $this->setMainModelAndFile();
-        $this->buildMigration();
-        
+        $this->columns = $transledColumns;
+        $this->makeModel();
     }
 
-    private function setMainModelAndFile() : void
+    private function makeModel() : void
     {
-        $modelFile = app_path('Models/' . ucfirst($this->argument) . '.php');
-        if (!file_exists($modelFile)) {
-            $this->consoleOutput->writeln("<error>" . ucfirst($this->argument) . " Not Found !</error>");
-        }
-        $this->mainModel = strtolower($this->argument);
-        $this->mainModelFile = $this->argument;
+        $this->stub = str_replace('{{ namespace }}', $this->namespace , $this->stub);
+        $columns = $this->generateTranslateColumns();
+        $this->stub = str_replace('{{ class }}', ucfirst($this->argument).'Translation', $this->stub);
+        $this->stub = str_replace('{{ fileds }}', $columns, $this->stub);
+        file_put_contents($this->generateMigrationFileName(), $this->stub);
+        $this->consoleOutput->writeln("<info>Migration Created</info>");
     }
 
-    private function buildMigration() : void
-    {
-        $this->columns = $this->getTranslatedAttributes();
-        dd($this->columns);
-        // $this->controlColumnsName();
-        // $this->setTableName();
-        // $this->makeMigration();
+    public function generateTranslateColumns(){
+        return "'".implode("','",$this->columns)."'";
     }
-
-    private function getTranslatedAttributes()
-    {
-        $modelName = $this->namespace . $this->getMainModel();
-
-        return  (new  $modelName())->translatedAttributes ;
+    public function generateMigrationFileName(){
+        return app_path('Models/Translation/'.ucfirst($this->argument).'Translation.php');
     }
-
-    private function getMainModel(): string
-    {
-        return ucfirst($this->mainModel);
-    }
-  
 }
