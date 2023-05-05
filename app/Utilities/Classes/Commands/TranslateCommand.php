@@ -28,15 +28,16 @@ class TranslateCommand {
 
         $this->argument = $argument;
         $this->tableName = strtolower($this->argument);
+        $this->getTranslatedAttributes();
         $this->makeMigration();
+        $this->makeModel();
     }
 
     private function makeModel(){
-        
+        return (new GenerateModelCommand())->run($this->argument,$this->columns);
     }
 
     private function makeMigration(){
-        $this->getTranslatedAttributes();
         return (new GenerateMigrationCommand())->run($this->argument,$this->columns);
     }
 
