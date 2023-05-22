@@ -9,6 +9,7 @@ use Astrotomic\Translatable\Translatable;
 class Post extends Model implements TranslatableContract
 {
     use HasFactory,Translatable;
+    
     protected $fillable = ['image'];
     public $translatedAttributes = ['name', 'slug','title','description'];
 
